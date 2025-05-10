@@ -1,6 +1,7 @@
 package com.teamx.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,13 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
         }
         String token = JwtUtil.generateToken(user.getEmail());
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(
+            Map.of(
+                "jwt", token,
+                "username", user.getUsername(),
+                "email", user.getEmail()
+            )
+        );
     }
 
     @PostMapping("/signup")
@@ -49,6 +56,12 @@ public class LoginController {
         }
         LoginModel savedUser = loginService.saveLogin(signupRequest);
         String token = JwtUtil.generateToken(savedUser.getEmail());
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(
+            Map.of(
+                "jwt", token,
+                "username", savedUser.getUsername(),
+                "email", savedUser.getEmail()
+            )
+        );
     }
 }
