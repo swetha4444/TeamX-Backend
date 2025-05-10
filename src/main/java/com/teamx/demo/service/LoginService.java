@@ -3,7 +3,7 @@ package com.teamx.demo.service;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SampleService {
+public class LoginService {
 
     public String getSampleData() {
         return "Sample Data";
