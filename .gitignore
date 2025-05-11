@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/resources/live_cricket_score_with_contest.json
+src/main/resources/match_squads.json
+.DS_Store
