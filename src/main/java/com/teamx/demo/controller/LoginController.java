@@ -43,6 +43,7 @@ public class LoginController {
         return ResponseEntity.ok().body(
             Map.of(
                 "jwt", token,
+                "id", user.getId(),
                 "username", user.getUsername(),
                 "email", user.getEmail()
             )
@@ -59,6 +60,7 @@ public class LoginController {
         return ResponseEntity.ok().body(
             Map.of(
                 "jwt", token,
+                "id", savedUser.getId(),
                 "username", savedUser.getUsername(),
                 "email", savedUser.getEmail()
             )
