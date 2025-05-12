@@ -13,3 +13,19 @@ producer = KafkaProducer(
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
+player_names = [
+    "Rameesha Shahid", "Christina Gough", "Ameya Kanukuntla", "Shravya Kolcharam",
+    "Milena Beresford", "Anne Bierwisch", "Sharanya Sadarangani", "Janet Ronalds",
+    "Karthika Vijayaraghavan", "Ashwini Balaji", "Nicole Kingsley", "Iris Edwards",
+    "Wilhelmina Garcia", "Asmita Kohli", "Aggeliki Savvani", "Chrysoula Kanta",
+    "Nikoleta Dolianiti", "Maria afroditi Vervitsioti", "Maria Polymeri",
+    "Elpida Kallous", "Thalia Koula", "Maria Syrioti", "Ioanna Argyropolou",
+    "Kapsokavadi Tereza", "Adamantia Makri", "Alekcandra Kourkoulou", "Evangellia Grammenou"
+]
+roles = ["Batsman", "Bowler", "Allrounder", "WK"]
+batting_styles = ["Right Handed Bat", "Left Handed Bat"]
+bowling_styles = [
+    "Right-arm medium", "Left-arm fast-medium", "Right-arm offbreak",
+    "Right-arm legbreak", "Left-arm orthodox", "Right-arm fast-medium", None
+]
+
