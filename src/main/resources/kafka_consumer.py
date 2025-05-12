@@ -16,3 +16,10 @@ consumer = KafkaConsumer(
     group_id='demo-group'
 )
 
+# MongoDB setup
+MONGO_URI = "mongodb+srv://ssaseendran:teamx1234@teamxcluster.ybhmxsu.mongodb.net/Login?retryWrites=true&w=majority"
+mongo_client = MongoClient(MONGO_URI)
+db = mongo_client['Login']
+contests_collection = db['contests']
+players_collection = db['players']
+
