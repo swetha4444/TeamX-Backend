@@ -13,14 +13,37 @@ public class Team {
     private String userEmail;
     private String contestId;
     private List<Player> players;
+    private Player captain;
+    private Player viceCaptain;
+
+    public Player getCaptain() {
+        return captain;
+    }
+
+    public void setCaptain(Player captain) {
+        this.captain = captain;
+    }
+
+    public Player getViceCaptain() {
+        return viceCaptain;
+    }
+
+    public void setViceCaptain(Player viceCaptain) {
+        this.viceCaptain = viceCaptain;
+    }
 
     public Team() {
     }
 
-    public Team(String userEmail, String contestId, List<Player> players) {
+
+    public Team(String id, String userEmail, String contestId, List<Player> players, Player captain,
+            Player viceCaptain) {
+        this.id = id;
         this.userEmail = userEmail;
         this.contestId = contestId;
         this.players = players;
+        this.captain = captain;
+        this.viceCaptain = viceCaptain;
     }
 
     public String getId() {
