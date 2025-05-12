@@ -29,3 +29,20 @@ bowling_styles = [
     "Right-arm legbreak", "Left-arm orthodox", "Right-arm fast-medium", None
 ]
 
+with open(TEAM_IMG_FILE) as f:
+    team_img_map = json.load(f)
+
+def generate_player(match_id, country):
+    img = team_img_map.get(country, "")
+    return {
+        "id": str(uuid.uuid4()),
+        "name": random.choice(player_names),
+        "role": random.choice(roles),
+        "battingStyle": random.choice(batting_styles),
+        "bowlingStyle": random.choice(bowling_styles),
+        "country": country,
+        "playerImg": img,
+        "credit": random.randint(5, 10),
+        "match_id": match_id  # match_id for MongoDB
+    }
+
