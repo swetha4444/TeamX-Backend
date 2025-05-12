@@ -46,3 +46,31 @@ def generate_player(match_id, country):
         "match_id": match_id  # match_id for MongoDB
     }
 
+with open(CONTESTS_FILE) as f:
+    contests = json.load(f)
+
+while True:
+    contest = next((c for c in contests if "data" in c and c["data"]), None)
+    if contest:
+        # Generate a new ObjectId-like string for contest _id
+        contest_id = uuid.uuid4().hex[:24]
+        contest['id'] = contest_id
+        contest['_id'] = contest_id
+        contest['_class'] = "com.teamx.demo.model.Contest"
+        producer.send('contests', contest)
+        print(f"Sent contest: {contest_id}")
+
+        team_infos = contest["data"][0].get("teamInfo", [])
+        for team in team_infos:
+            country = team.get("name")
+            for _ in range(11):
+                player = generate_player(contest_id, country)
+                producer.send('players', player)
+                print(f"Sent player: {player['name']} for contest {contest_id} (team: {country})")
+
+        producer.flush()
+        print("All records sent to Kafka. Waiting 2 minutes...")
+        time.sleep(120)  # 2 minutes
+    else:
+        print("No contest with data found.")
+        break
