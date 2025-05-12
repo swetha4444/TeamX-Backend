@@ -1,6 +1,7 @@
 package com.teamx.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,9 @@ public class TeamService {
     
     public List<Team> getTeamsByUserEmail(String userEmail) {
         return teamRepository.findByUserEmail(userEmail);
+    }
+    
+    public Optional<Team> getTeamById(String teamId) {
+        return teamRepository.findById(teamId);
     }
 }
