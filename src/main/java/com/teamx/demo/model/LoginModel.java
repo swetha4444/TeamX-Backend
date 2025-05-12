@@ -11,6 +11,7 @@ public class LoginModel {
     private String password;
     private String email;
     private String phoneNumber;
+    private int wallet = 100; // initialize with 100
 
     public LoginModel() {
         // Default constructor
@@ -62,5 +63,13 @@ public class LoginModel {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public int getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(int wallet) {
+        this.wallet = wallet;
     }
 }
