@@ -34,3 +34,4 @@ build/
 src/main/resources/live_cricket_score_with_contest.json
 src/main/resources/match_squads.json
 .DS_Store
+src/main/resources/players.json
