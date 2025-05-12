@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.teamx.demo.model.LoginModel;
@@ -55,6 +56,7 @@ public class LoginController {
         if (loginService.findByEmail(signupRequest.getEmail()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already registered");
         }
+        signupRequest.setWallet(100); // Ensure wallet is initialized
         LoginModel savedUser = loginService.saveLogin(signupRequest);
         String token = JwtUtil.generateToken(savedUser.getEmail());
         return ResponseEntity.ok().body(
@@ -62,8 +64,42 @@ public class LoginController {
                 "jwt", token,
                 "id", savedUser.getId(),
                 "username", savedUser.getUsername(),
-                "email", savedUser.getEmail()
+                "email", savedUser.getEmail(),
+                "wallet", savedUser.getWallet()
             )
         );
+    }
+
+    @PostMapping("/deduct")
+    public ResponseEntity<?> deductFromWallet(@RequestBody Map<String, Object> payload) {
+        String email = (String) payload.get("email");
+        int amount = (int) payload.get("amount");
+        Optional<LoginModel> userOpt = loginService.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        LoginModel user = userOpt.get();
+        if (amount > user.getWallet()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient wallet balance");
+        }
+        user.setWallet(user.getWallet() - amount);
+        loginService.saveLogin(user);
+        return ResponseEntity.ok(Map.of(
+            "message", "Deduction successful",
+            "wallet", user.getWallet()
+        ));
+    }
+
+    @GetMapping("/wallet")
+    public ResponseEntity<?> getWalletDetails(@RequestParam String email) {
+        Optional<LoginModel> userOpt = loginService.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        LoginModel user = userOpt.get();
+        return ResponseEntity.ok(Map.of(
+            "email", user.getEmail(),
+            "wallet", user.getWallet()
+        ));
     }
 }
