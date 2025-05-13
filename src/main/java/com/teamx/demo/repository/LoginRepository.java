@@ -8,4 +8,5 @@ import com.teamx.demo.model.LoginModel;
 
 public interface LoginRepository extends MongoRepository<LoginModel, String> {
     Optional<LoginModel> findByEmail(String email);
+    void deleteByEmail(String email);
 }
