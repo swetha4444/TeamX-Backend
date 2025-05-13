@@ -258,26 +258,45 @@ public class ControllerIntegrationTests {
 
     @Test
     void testCreateTeam_Found() {
-        Map<String, Object> player = Map.of(
-            "id", "testplayer1",
-            "name", "Test Player",
-            "team", "Test Team",
-            "role", "Allrounder"
+        String contestId = "68210e61c8ceb31ce5c0f1b8";
+        String matchId = "68210e61c8ceb31ce5c0f1ba";
+
+        // Sample players (minimum two, as in your sample)
+        Map<String, Object> player1 = Map.of(
+            "id", "682148e8720781706177616a",
+            "name", "Sharanya Sadarangani",
+            "role", "Batsman",
+            "battingStyle", "Left Handed Bat",
+            "country", "Japan",
+            "playerImg", "https://g.cricapi.com/iapi/618-637928917609353191.png?w=48",
+            "credit", 4,
+            "match_id", matchId
+        );
+        Map<String, Object> player2 = Map.of(
+            "id", "682148e8720781706177616b",
+            "name", "Shravya Kolcharam",
+            "role", "Bowler",
+            "battingStyle", "Left Handed Bat",
+            "bowlingStyle", "Left-arm orthodox",
+            "country", "Japan",
+            "playerImg", "https://g.cricapi.com/iapi/618-637928917609353191.png?w=48",
+            "credit", 7,
+            "match_id", matchId
         );
 
         Map<String, Object> team = Map.of(
-            "matchId", "68210e61c8ceb31ce5c0f1b8",
+            "contestId", contestId,
             "userEmail", "new@example.com",
-            "captain", "testplayer1",      // player id
-            "viceCaptain", "testplayer1",  // player id
-            "players", List.of(player)     // list of player objects
+            "players", List.of(player1, player2),
+            "captain", player1,
+            "viceCaptain", player2
         );
 
         HttpEntity<Map<String, Object>> req = new HttpEntity<>(team);
         ResponseEntity<Map> response = restTemplate.postForEntity("/teams", req, Map.class);
-        // assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-        System.out.println(response.getBody())
-        assertThat(response.getBody()).containsKey("id");
+        System.out.println("Create team response: " + response.getBody());
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).containsKey("id"); // or "_id" depending on your Team model
     }
 
     @Test
