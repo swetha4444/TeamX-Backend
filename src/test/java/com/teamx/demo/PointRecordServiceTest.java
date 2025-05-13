@@ -50,4 +50,9 @@ class PointRecordServiceTest {
         assertThat(pointRecordService.save(record)).isEqualTo(record);
     }
 
+    @Test
+    void testDeleteById() {
+        pointRecordService.deleteById("id");
+        verify(pointRecordRepository).deleteById("id");
+    }
 }
