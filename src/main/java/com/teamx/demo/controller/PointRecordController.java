@@ -17,8 +17,18 @@ import com.teamx.demo.model.PointRecord;
 import com.teamx.demo.service.PointRecordService;
 
 /**
- * REST controller for managing point records.
- * Provides endpoints to retrieve, create, update, and delete points for contests.
+ * REST controller for managing point records for fantasy contests.
+ * <p>
+ * This controller provides endpoints to:
+ * <ul>
+ *   <li>Retrieve all point records</li>
+ *   <li>Retrieve points for a specific contest</li>
+ *   <li>Create a new point record</li>
+ *   <li>Update an existing point record</li>
+ *   <li>Delete a point record</li>
+ * </ul>
+ * Each point record is associated with a contest and contains a list of points earned by players or teams.
+ * </p>
  */
 @RestController
 @RequestMapping("/points")
@@ -27,8 +37,10 @@ public class PointRecordController {
     private PointRecordService pointRecordService;
 
     /**
-     * Retrieves all point records.
-     * @return list of all point records
+     * Retrieves all point records in the system.
+     *
+     * @return a list of all {@link PointRecord} objects stored in the database.
+     *         Each record contains the contest ID and the list of points for that contest.
      */
     @GetMapping
     public List<PointRecord> getAll() {
@@ -37,8 +49,10 @@ public class PointRecordController {
 
     /**
      * Retrieves the point record for a specific contest.
-     * @param contestId the contest ID
-     * @return the point record if found, or 404 if not found
+     *
+     * @param contestId the unique identifier of the contest whose points are to be fetched.
+     * @return a {@link ResponseEntity} containing the {@link PointRecord} if found,
+     *         or a 404 Not Found response if no record exists for the given contest ID.
      */
     @GetMapping("/contest/{contestId}")
     public ResponseEntity<PointRecord> getByContestId(@PathVariable String contestId) {
@@ -48,9 +62,10 @@ public class PointRecordController {
     }
 
     /**
-     * Creates a new point record.
-     * @param record the point record to create
-     * @return the created point record
+     * Creates a new point record for a contest.
+     *
+     * @param record the {@link PointRecord} object to be created. Must include the contest ID and initial points.
+     * @return the created {@link PointRecord} with its generated ID.
      */
     @PostMapping
     public PointRecord create(@RequestBody PointRecord record) {
@@ -58,10 +73,11 @@ public class PointRecordController {
     }
 
     /**
-     * Updates an existing point record by ID.
-     * @param id the point record ID
-     * @param record the updated point record
-     * @return the updated point record
+     * Updates an existing point record by its ID.
+     *
+     * @param id     the unique identifier of the point record to update.
+     * @param record the updated {@link PointRecord} object. The ID in the path will override the ID in the body.
+     * @return a {@link ResponseEntity} containing the updated {@link PointRecord}.
      */
     @PutMapping("/{id}")
     public ResponseEntity<PointRecord> update(@PathVariable String id, @RequestBody PointRecord record) {
@@ -70,9 +86,10 @@ public class PointRecordController {
     }
 
     /**
-     * Deletes a point record by ID.
-     * @param id the point record ID
-     * @return no content response
+     * Deletes a point record by its unique ID.
+     *
+     * @param id the unique identifier of the point record to delete.
+     * @return a {@link ResponseEntity} with HTTP 204 No Content if deletion is successful.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
