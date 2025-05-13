@@ -241,6 +241,69 @@ public class ControllerIntegrationTests {
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
     }
 
+    @Test
+    void testPointRecordController_FullCoverage() {
+        // --- Create ---
+        String contestId = "68210e61c8ceb31ce5c0f1b9";
+        Map<String, Object> point1 = Map.of(
+            "type", "Run Out(Direct - Hit)",
+            "point", 12,
+            "timestamp", "2025-05-13T02:16:39.511848Z"
+        );
+        Map<String, Object> point2 = Map.of(
+            "type", "Four Bonus",
+            "point", 2,
+            "timestamp", "2025-05-13T02:15:39.511848Z"
+        );
+        Map<String, Object> record = Map.of(
+            "contest_id", contestId,
+            "points", List.of(point1, point2)
+        );
+
+        // Create
+        ResponseEntity<Map> createResp = restTemplate.postForEntity("/points", record, Map.class);
+        assertThat(createResp.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(createResp.getBody()).containsKey("id");
+        String recordId = createResp.getBody().get("id").toString();
+
+        // Get All
+        ResponseEntity<String> getAllResp = restTemplate.getForEntity("/points", String.class);
+        assertThat(getAllResp.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getAllResp.getBody()).contains(contestId);
+
+        // Get By ContestId (found)
+        ResponseEntity<String> getByContestIdResp = restTemplate.getForEntity("/points/contest/" + contestId, String.class);
+        assertThat(getByContestIdResp.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getByContestIdResp.getBody()).contains("Run Out(Direct - Hit)");
+
+        // Get By ContestId (not found)
+        ResponseEntity<String> getByContestIdNotFound = restTemplate.getForEntity("/points/contest/doesnotexist", String.class);
+        assertThat(getByContestIdNotFound.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        // Update
+        Map<String, Object> point3 = Map.of(
+            "type", "Wicket(Excluding Run Out)",
+            "point", 25,
+            "timestamp", "2025-05-13T02:13:39.511848Z"
+        );
+        Map<String, Object> updatedRecord = Map.of(
+            "contest_id", contestId,
+            "points", List.of(point1, point2, point3)
+        );
+        HttpEntity<Map<String, Object>> updateReq = new HttpEntity<>(updatedRecord);
+        ResponseEntity<Map> updateResp = restTemplate.exchange("/points/" + recordId, HttpMethod.PUT, updateReq, Map.class);
+        assertThat(updateResp.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(updateResp.getBody().toString()).contains("Wicket(Excluding Run Out)");
+
+        // Delete
+        ResponseEntity<Void> deleteResp = restTemplate.exchange("/points/" + recordId, HttpMethod.DELETE, null, Void.class);
+        assertThat(deleteResp.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        // Delete again (should still return 204)
+        ResponseEntity<Void> deleteResp2 = restTemplate.exchange("/points/" + recordId, HttpMethod.DELETE, null, Void.class);
+        assertThat(deleteResp2.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
     // --- TeamController ---
     @Test
     void testGetTeamsByContestId() {
