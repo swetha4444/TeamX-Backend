@@ -1,16 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.teamx.demo.ControllerIntegrationTests
 -------------------------------------------------------------------------------
-Tests run: 29, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.520 s <<< FAILURE! -- in com.teamx.demo.ControllerIntegrationTests
-com.teamx.demo.ControllerIntegrationTests.testCreateTeam_Found -- Time elapsed: 0.022 s <<< FAILURE!
-java.lang.AssertionError: 
-
-Expecting actual:
-  {"error"="Bad Request", "path"="/teams", "status"=400, "timestamp"="2025-05-13T19:44:10.389+00:00"}
-to contain key:
-  "id"
-	at com.teamx.demo.ControllerIntegrationTests.testCreateTeam_Found(ControllerIntegrationTests.java:279)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-
+Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.713 s -- in com.teamx.demo.ControllerIntegrationTests

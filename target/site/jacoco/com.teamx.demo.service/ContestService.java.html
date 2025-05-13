@@ -42,17 +42,17 @@ import com.teamx.demo.repository.ContestRepository;
     }
 
     public Optional&lt;Contest&gt; reduceSpotsLeft(String contestId) {
-<span class="nc" id="L45">        Optional&lt;Contest&gt; contestOpt = contestRepository.findById(contestId);</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (contestOpt.isPresent()) {</span>
-<span class="nc" id="L47">            Contest contest = contestOpt.get();</span>
-<span class="nc bnc" id="L48" title="All 4 branches missed.">            if (contest.getData() != null &amp;&amp; !contest.getData().isEmpty()) {</span>
-<span class="nc" id="L49">                Contest.ContestData data = contest.getData().get(0);</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">                if (data.getSpotsLeft() &gt; 0) {</span>
-<span class="nc" id="L51">                    data.setSpotsLeft(data.getSpotsLeft() - 1);</span>
-<span class="nc" id="L52">                    contestRepository.save(contest);</span>
+<span class="fc" id="L45">        Optional&lt;Contest&gt; contestOpt = contestRepository.findById(contestId);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (contestOpt.isPresent()) {</span>
+<span class="fc" id="L47">            Contest contest = contestOpt.get();</span>
+<span class="pc bpc" id="L48" title="2 of 4 branches missed.">            if (contest.getData() != null &amp;&amp; !contest.getData().isEmpty()) {</span>
+<span class="fc" id="L49">                Contest.ContestData data = contest.getData().get(0);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">                if (data.getSpotsLeft() &gt; 0) {</span>
+<span class="fc" id="L51">                    data.setSpotsLeft(data.getSpotsLeft() - 1);</span>
+<span class="fc" id="L52">                    contestRepository.save(contest);</span>
                 }
             }
-<span class="nc" id="L55">            return Optional.of(contest);</span>
+<span class="fc" id="L55">            return Optional.of(contest);</span>
         }
 <span class="nc" id="L57">        return Optional.empty();</span>
     }
