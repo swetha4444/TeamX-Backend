@@ -74,34 +74,6 @@ import com.teamx.demo.service.TeamService;
     }
     
     /**
-     * Retrieves the captain of a team.
-     * @param teamId the team ID
-     * @return the captain of the team, or 404 if not found
-     */
-    @GetMapping(&quot;/{teamId}/captain&quot;)
-    public ResponseEntity&lt;?&gt; getTeamCaptain(@PathVariable String teamId) {
-<span class="nc" id="L83">        Optional&lt;Team&gt; teamOpt = teamService.getTeamById(teamId);</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (teamOpt.isPresent()) {</span>
-<span class="nc" id="L85">            return ResponseEntity.ok(teamOpt.get().getCaptain());</span>
-        }
-<span class="nc" id="L87">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Team not found&quot;);</span>
-    }
-    
-    /**
-     * Retrieves the vice-captain of a team.
-     * @param teamId the team ID
-     * @return the vice-captain of the team, or 404 if not found
-     */
-    @GetMapping(&quot;/{teamId}/viceCaptain&quot;)
-    public ResponseEntity&lt;?&gt; getTeamViceCaptain(@PathVariable String teamId) {
-<span class="nc" id="L97">        Optional&lt;Team&gt; teamOpt = teamService.getTeamById(teamId);</span>
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (teamOpt.isPresent()) {</span>
-<span class="nc" id="L99">            return ResponseEntity.ok(teamOpt.get().getViceCaptain());</span>
-        }
-<span class="nc" id="L101">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Team not found&quot;);</span>
-    }
-    
-    /**
      * Retrieves combined contest and team details for all contests a user has joined.
      * @param userEmail the user's email
      * @return list of contests with their associated teams for the user
@@ -109,24 +81,24 @@ import com.teamx.demo.service.TeamService;
     @GetMapping(&quot;/combined&quot;)
     public ResponseEntity&lt;?&gt; getContestAndTeamDetails(@RequestParam String userEmail) {
         // Get all teams created by the user.
-<span class="nc" id="L112">        List&lt;Team&gt; userTeams = teamService.getTeamsByUserEmail(userEmail);</span>
+<span class="nc" id="L84">        List&lt;Team&gt; userTeams = teamService.getTeamsByUserEmail(userEmail);</span>
         
         // Collect unique contestIds from the user's teams.
-<span class="nc" id="L115">        Set&lt;String&gt; contestIds = userTeams.stream()</span>
-<span class="nc" id="L116">                .map(Team::getContestId)</span>
-<span class="nc" id="L117">                .collect(Collectors.toSet());</span>
+<span class="nc" id="L87">        Set&lt;String&gt; contestIds = userTeams.stream()</span>
+<span class="nc" id="L88">                .map(Team::getContestId)</span>
+<span class="nc" id="L89">                .collect(Collectors.toSet());</span>
         
         // For each contestId, get contest details and attach teams for the contest.
-<span class="nc" id="L120">        List&lt;ContestWithTeams&gt; combinedResponse = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        for (String contestId : contestIds) {</span>
-<span class="nc" id="L122">            Optional&lt;Contest&gt; contestOpt = contestService.getContestById(contestId);</span>
-<span class="nc bnc" id="L123" title="All 2 branches missed.">            if (contestOpt.isPresent()) {</span>
-<span class="nc" id="L124">                Contest contest = contestOpt.get();</span>
-<span class="nc" id="L125">                List&lt;Team&gt; teamsForContest = teamService.getTeamsByContestId(contestId);</span>
-<span class="nc" id="L126">                combinedResponse.add(new ContestWithTeams(contest, teamsForContest));</span>
+<span class="nc" id="L92">        List&lt;ContestWithTeams&gt; combinedResponse = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        for (String contestId : contestIds) {</span>
+<span class="nc" id="L94">            Optional&lt;Contest&gt; contestOpt = contestService.getContestById(contestId);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (contestOpt.isPresent()) {</span>
+<span class="nc" id="L96">                Contest contest = contestOpt.get();</span>
+<span class="nc" id="L97">                List&lt;Team&gt; teamsForContest = teamService.getTeamsByContestId(contestId);</span>
+<span class="nc" id="L98">                combinedResponse.add(new ContestWithTeams(contest, teamsForContest));</span>
             }
-<span class="nc" id="L128">        }</span>
-<span class="nc" id="L129">        return ResponseEntity.ok(combinedResponse);</span>
+        }
+<span class="nc" id="L101">        return ResponseEntity.ok(combinedResponse);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

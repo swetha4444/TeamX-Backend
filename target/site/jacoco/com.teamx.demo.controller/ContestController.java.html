@@ -55,9 +55,9 @@ import com.teamx.demo.service.ContestService;
      */
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Contest&gt; getContestById(@PathVariable String id) {
-<span class="nc" id="L58">        return contestService.getContestById(id)</span>
-<span class="nc" id="L59">                .map(ResponseEntity::ok)</span>
-<span class="nc" id="L60">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="fc" id="L58">        return contestService.getContestById(id)</span>
+<span class="fc" id="L59">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L60">                .orElse(ResponseEntity.notFound().build());</span>
     }
 
     /**
@@ -67,9 +67,9 @@ import com.teamx.demo.service.ContestService;
      */
     @PutMapping(&quot;/{id}/join&quot;)
     public ResponseEntity&lt;Contest&gt; joinContest(@PathVariable String id) {
-<span class="nc" id="L70">        return contestService.updatePrizePoolAndSpots(id)</span>
-<span class="nc" id="L71">                .map(ResponseEntity::ok)</span>
-<span class="nc" id="L72">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="fc" id="L70">        return contestService.updatePrizePoolAndSpots(id)</span>
+<span class="fc" id="L71">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L72">                .orElse(ResponseEntity.notFound().build());</span>
     }
 
     /**
@@ -80,19 +80,19 @@ import com.teamx.demo.service.ContestService;
     @DeleteMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;?&gt; deleteContestAndRelated(@PathVariable String id) {
         // Delete contest
-<span class="nc" id="L83">        contestService.getContestById(id).ifPresent(contest -&gt; contestService.deleteById(id));</span>
+<span class="pc" id="L83">        contestService.getContestById(id).ifPresent(contest -&gt; contestService.deleteById(id));</span>
 
         // Delete all players with match_id = contest id
-<span class="nc" id="L86">        playerRepository.deleteByMatchId(id);</span>
+<span class="fc" id="L86">        playerRepository.deleteByMatchId(id);</span>
 
         // Delete all points with contest_id = contest id
-<span class="nc" id="L89">        pointRecordRepository.deleteByContestId(id);</span>
+<span class="fc" id="L89">        pointRecordRepository.deleteByContestId(id);</span>
 
         // Delete all teams with contestId = contest id
-<span class="nc" id="L92">        teamRepository.deleteByContestId(id);</span>
+<span class="fc" id="L92">        teamRepository.deleteByContestId(id);</span>
 
-<span class="nc" id="L94">        return ResponseEntity.ok(</span>
-<span class="nc" id="L95">            Map.of(&quot;message&quot;, &quot;Contest, related players, teams, and points deleted successfully&quot;)</span>
+<span class="fc" id="L94">        return ResponseEntity.ok(</span>
+<span class="fc" id="L95">            Map.of(&quot;message&quot;, &quot;Contest, related players, teams, and points deleted successfully&quot;)</span>
         );
     }
 }

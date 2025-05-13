@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.teamx.demo.ControllerIntegrationTests
 -------------------------------------------------------------------------------
-Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.275 s -- in com.teamx.demo.ControllerIntegrationTests
+Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.253 s -- in com.teamx.demo.ControllerIntegrationTests

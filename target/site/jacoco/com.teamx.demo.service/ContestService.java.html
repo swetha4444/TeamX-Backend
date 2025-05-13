@@ -20,12 +20,12 @@ import com.teamx.demo.repository.ContestRepository;
     }
 
     public Optional&lt;Contest&gt; getContestById(String id) {
-<span class="nc" id="L23">        return contestRepository.findById(id);</span>
+<span class="fc" id="L23">        return contestRepository.findById(id);</span>
     }
 
     public Optional&lt;Contest&gt; updatePrizePoolAndSpots(String id) {
-<span class="nc" id="L27">        Optional&lt;Contest&gt; contestOpt = contestRepository.findById(id);</span>
-<span class="nc bnc" id="L28" title="All 2 branches missed.">        if (contestOpt.isPresent()) {</span>
+<span class="fc" id="L27">        Optional&lt;Contest&gt; contestOpt = contestRepository.findById(id);</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if (contestOpt.isPresent()) {</span>
 <span class="nc" id="L29">            Contest contest = contestOpt.get();</span>
             // Assuming only one data entry per contest (adjust if multiple)
 <span class="nc bnc" id="L31" title="All 4 branches missed.">            if (contest.getData() != null &amp;&amp; !contest.getData().isEmpty()) {</span>
@@ -38,7 +38,7 @@ import com.teamx.demo.repository.ContestRepository;
             }
 <span class="nc" id="L39">            return Optional.of(contest);</span>
         }
-<span class="nc" id="L41">        return Optional.empty();</span>
+<span class="fc" id="L41">        return Optional.empty();</span>
     }
 
     public Optional&lt;Contest&gt; reduceSpotsLeft(String contestId) {
