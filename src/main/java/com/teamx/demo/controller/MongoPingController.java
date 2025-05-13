@@ -6,12 +6,19 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller to check MongoDB connectivity.
+ */
 @RestController
 public class MongoPingController {
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * Endpoint to ping MongoDB and verify connection.
+     * @return a message indicating if MongoDB connection is OK or failed
+     */
     @GetMapping("/mongo-ping")
     public String pingMongo() {
         Document ping = new Document("ping", 1);
