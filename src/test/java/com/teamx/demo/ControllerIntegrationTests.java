@@ -203,7 +203,22 @@ public class ControllerIntegrationTests {
         assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
     }
 
+    @Test
+    void testDeleteContestAndRelated_NotFound() {
+        ResponseEntity<Map> response = restTemplate.exchange("/contests/doesnotexist", HttpMethod.DELETE, null, Map.class);
+        // Controller always returns 200 OK with a message, even if not found
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).containsKey("message");
+    }
 
+    @Test
+    void testDeleteContestAndRelated_Found() {
+        // Assumes a contest with ID "existingContestId" exists
+        String contestId = "existingContestId";
+        ResponseEntity<Map> response = restTemplate.exchange("/contests/" + contestId, HttpMethod.DELETE, null, Map.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).containsKey("message");
+    }
 
 
 
