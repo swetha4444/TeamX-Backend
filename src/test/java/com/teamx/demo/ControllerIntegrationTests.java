@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.teamx.demo.model.Contest;
 import com.teamx.demo.model.LoginModel;
 
 /**
@@ -161,13 +162,21 @@ public class ControllerIntegrationTests {
         assertThat(response.getBody()).contains("MongoDB connection");
     }
 
+    // --- ContestController FULL COVERAGE TESTS ---
 
-    // --- ContestController ---
     @Test
     void testGetAllContests() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/contests", String.class);
-        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        ResponseEntity<Contest[]> response = restTemplate.getForEntity("/contests", Contest[].class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
     }
+
+    @Test
+    void testGetContestById_NotFound() {
+        ResponseEntity<Contest> response = restTemplate.getForEntity("/contests/doesnotexist", Contest.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
 
     // --- PlayerController ---
     @Test
