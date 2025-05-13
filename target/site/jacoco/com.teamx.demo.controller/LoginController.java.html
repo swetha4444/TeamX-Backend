@@ -46,8 +46,8 @@ import com.teamx.demo.utils.JwtUtil;
     @PostMapping(&quot;/login&quot;)
     public ResponseEntity&lt;?&gt; login(@RequestBody LoginModel loginRequest) {
 <span class="fc" id="L48">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(loginRequest.getEmail());</span>
-<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
-<span class="nc" id="L50">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Email not registered&quot;);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (userOpt.isEmpty()) {</span>
+<span class="fc" id="L50">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Email not registered&quot;);</span>
         }
 <span class="fc" id="L52">        LoginModel user = userOpt.get();</span>
 <span class="fc bfc" id="L53" title="All 2 branches covered.">        if (!user.getPassword().equals(loginRequest.getPassword())) {</span>
@@ -71,8 +71,8 @@ import com.teamx.demo.utils.JwtUtil;
      */
     @PostMapping(&quot;/signup&quot;)
     public ResponseEntity&lt;?&gt; signup(@RequestBody LoginModel signupRequest) {
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (loginService.findByEmail(signupRequest.getEmail()).isPresent()) {</span>
-<span class="nc" id="L75">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;Email already registered&quot;);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (loginService.findByEmail(signupRequest.getEmail()).isPresent()) {</span>
+<span class="fc" id="L75">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;Email already registered&quot;);</span>
         }
 <span class="fc" id="L77">        signupRequest.setWallet(100); // Ensure wallet is initialized</span>
 <span class="fc" id="L78">        LoginModel savedUser = loginService.saveLogin(signupRequest);</span>
@@ -102,8 +102,8 @@ import com.teamx.demo.utils.JwtUtil;
 <span class="nc" id="L102">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
         }
 <span class="fc" id="L104">        LoginModel user = userOpt.get();</span>
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (amount &gt; user.getWallet()) {</span>
-<span class="nc" id="L106">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Insufficient wallet balance&quot;);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (amount &gt; user.getWallet()) {</span>
+<span class="fc" id="L106">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Insufficient wallet balance&quot;);</span>
         }
 <span class="fc" id="L108">        user.setWallet(user.getWallet() - amount);</span>
 <span class="fc" id="L109">        loginService.saveLogin(user);</span>
@@ -142,8 +142,8 @@ import com.teamx.demo.utils.JwtUtil;
     @GetMapping(&quot;/wallet&quot;)
     public ResponseEntity&lt;?&gt; getWalletDetails(@RequestParam String email) {
 <span class="fc" id="L144">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(email);</span>
-<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
-<span class="nc" id="L146">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (userOpt.isEmpty()) {</span>
+<span class="fc" id="L146">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
         }
 <span class="fc" id="L148">        LoginModel user = userOpt.get();</span>
 <span class="fc" id="L149">        return ResponseEntity.ok(Map.of(</span>
@@ -160,8 +160,8 @@ import com.teamx.demo.utils.JwtUtil;
     @DeleteMapping(&quot;/delete&quot;)
     public ResponseEntity&lt;?&gt; deleteUser(@RequestParam String email) {
 <span class="fc" id="L162">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(email);</span>
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
-<span class="nc" id="L164">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (userOpt.isEmpty()) {</span>
+<span class="fc" id="L164">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
         }
 <span class="fc" id="L166">        loginService.deleteByEmail(email);</span>
 <span class="fc" id="L167">        return ResponseEntity.ok(Map.of(&quot;message&quot;, &quot;User deleted successfully&quot;));</span>

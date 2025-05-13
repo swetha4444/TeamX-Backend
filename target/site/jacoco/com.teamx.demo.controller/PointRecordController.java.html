@@ -18,7 +18,6 @@ import com.teamx.demo.service.PointRecordService;
 
 /**
  * REST controller for managing point records for fantasy contests.
- * &lt;p&gt;
  * This controller provides endpoints to:
  * &lt;ul&gt;
  *   &lt;li&gt;Retrieve all point records&lt;/li&gt;
@@ -28,11 +27,10 @@ import com.teamx.demo.service.PointRecordService;
  *   &lt;li&gt;Delete a point record&lt;/li&gt;
  * &lt;/ul&gt;
  * Each point record is associated with a contest and contains a list of points earned by players or teams.
- * &lt;/p&gt;
  */
 @RestController
 @RequestMapping(&quot;/points&quot;)
-<span class="fc" id="L35">public class PointRecordController {</span>
+<span class="fc" id="L33">public class PointRecordController {</span>
     @Autowired
     private PointRecordService pointRecordService;
 
@@ -44,7 +42,7 @@ import com.teamx.demo.service.PointRecordService;
      */
     @GetMapping
     public List&lt;PointRecord&gt; getAll() {
-<span class="fc" id="L47">        return pointRecordService.getAll();</span>
+<span class="fc" id="L45">        return pointRecordService.getAll();</span>
     }
 
     /**
@@ -56,9 +54,9 @@ import com.teamx.demo.service.PointRecordService;
      */
     @GetMapping(&quot;/contest/{contestId}&quot;)
     public ResponseEntity&lt;PointRecord&gt; getByContestId(@PathVariable String contestId) {
-<span class="nc" id="L59">        return pointRecordService.getByContestId(contestId)</span>
-<span class="nc" id="L60">                .map(ResponseEntity::ok)</span>
-<span class="nc" id="L61">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="nc" id="L57">        return pointRecordService.getByContestId(contestId)</span>
+<span class="nc" id="L58">                .map(ResponseEntity::ok)</span>
+<span class="nc" id="L59">                .orElse(ResponseEntity.notFound().build());</span>
     }
 
     /**
@@ -69,7 +67,7 @@ import com.teamx.demo.service.PointRecordService;
      */
     @PostMapping
     public PointRecord create(@RequestBody PointRecord record) {
-<span class="nc" id="L72">        return pointRecordService.save(record);</span>
+<span class="nc" id="L70">        return pointRecordService.save(record);</span>
     }
 
     /**
@@ -81,8 +79,8 @@ import com.teamx.demo.service.PointRecordService;
      */
     @PutMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;PointRecord&gt; update(@PathVariable String id, @RequestBody PointRecord record) {
-<span class="nc" id="L84">        record.setId(id);</span>
-<span class="nc" id="L85">        return ResponseEntity.ok(pointRecordService.save(record));</span>
+<span class="nc" id="L82">        record.setId(id);</span>
+<span class="nc" id="L83">        return ResponseEntity.ok(pointRecordService.save(record));</span>
     }
 
     /**
@@ -93,8 +91,8 @@ import com.teamx.demo.service.PointRecordService;
      */
     @DeleteMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Void&gt; delete(@PathVariable String id) {
-<span class="nc" id="L96">        pointRecordService.deleteById(id);</span>
-<span class="nc" id="L97">        return ResponseEntity.noContent().build();</span>
+<span class="nc" id="L94">        pointRecordService.deleteById(id);</span>
+<span class="nc" id="L95">        return ResponseEntity.noContent().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
