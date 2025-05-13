@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MongoPingController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.teamx.demo.controller</a> &gt; <span class="el_source">MongoPingController.java</span></div><h1>MongoPingController.java</h1><pre class="source lang-java linenums">package com.teamx.demo.controller;
+
+import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * REST controller to check MongoDB connectivity.
+ */
+@RestController
+<span class="fc" id="L13">public class MongoPingController {</span>
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    /**
+     * Endpoint to ping MongoDB and verify connection.
+     * @return a message indicating if MongoDB connection is OK or failed
+     */
+    @GetMapping(&quot;/mongo-ping&quot;)
+    public String pingMongo() {
+<span class="fc" id="L24">        Document ping = new Document(&quot;ping&quot;, 1);</span>
+<span class="fc" id="L25">        Document result = mongoTemplate.executeCommand(ping);</span>
+<span class="fc" id="L26">        Object okValue = result.get(&quot;ok&quot;);</span>
+<span class="pc bpc" id="L27" title="4 of 6 branches missed.">        if ((okValue instanceof Double &amp;&amp; ((Double) okValue) == 1.0) ||</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">            (okValue instanceof Integer &amp;&amp; ((Integer) okValue) == 1)) {</span>
+<span class="fc" id="L29">            return &quot;MongoDB connection is OK!&quot;;</span>
+        } else {
+<span class="nc" id="L31">            return &quot;MongoDB connection failed!&quot;;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

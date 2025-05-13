@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.teamx.demo.controller</a> &gt; <span class="el_source">LoginController.java</span></div><h1>LoginController.java</h1><pre class="source lang-java linenums">package com.teamx.demo.controller;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.teamx.demo.model.LoginModel;
+import com.teamx.demo.service.LoginService;
+import com.teamx.demo.utils.JwtUtil;
+
+/**
+ * REST controller for authentication and wallet operations.
+ */
+@RestController
+@RequestMapping(&quot;/auth&quot;)
+<span class="fc" id="L27">public class LoginController {</span>
+
+    @Autowired
+    private LoginService loginService;
+
+    /**
+     * Returns all login records.
+     * @return list of all users
+     */
+    @GetMapping
+    public List&lt;LoginModel&gt; getAllLogins() {
+<span class="fc" id="L38">        return loginService.getAllLogins();</span>
+    }
+
+    /**
+     * Authenticates a user and returns a JWT token if successful.
+     * @param loginRequest the login request containing email and password
+     * @return JWT token and user info if successful, error otherwise
+     */
+    @PostMapping(&quot;/login&quot;)
+    public ResponseEntity&lt;?&gt; login(@RequestBody LoginModel loginRequest) {
+<span class="fc" id="L48">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(loginRequest.getEmail());</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
+<span class="nc" id="L50">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Email not registered&quot;);</span>
+        }
+<span class="fc" id="L52">        LoginModel user = userOpt.get();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (!user.getPassword().equals(loginRequest.getPassword())) {</span>
+<span class="fc" id="L54">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;Incorrect password&quot;);</span>
+        }
+<span class="fc" id="L56">        String token = JwtUtil.generateToken(user.getEmail());</span>
+<span class="fc" id="L57">        return ResponseEntity.ok().body(</span>
+<span class="fc" id="L58">            Map.of(</span>
+                &quot;jwt&quot;, token,
+<span class="fc" id="L60">                &quot;id&quot;, user.getId(),</span>
+<span class="fc" id="L61">                &quot;username&quot;, user.getUsername(),</span>
+<span class="fc" id="L62">                &quot;email&quot;, user.getEmail()</span>
+            )
+        );
+    }
+
+    /**
+     * Registers a new user.
+     * @param signupRequest the signup request containing user details
+     * @return JWT token and user info if successful, error otherwise
+     */
+    @PostMapping(&quot;/signup&quot;)
+    public ResponseEntity&lt;?&gt; signup(@RequestBody LoginModel signupRequest) {
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (loginService.findByEmail(signupRequest.getEmail()).isPresent()) {</span>
+<span class="nc" id="L75">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;Email already registered&quot;);</span>
+        }
+<span class="fc" id="L77">        signupRequest.setWallet(100); // Ensure wallet is initialized</span>
+<span class="fc" id="L78">        LoginModel savedUser = loginService.saveLogin(signupRequest);</span>
+<span class="fc" id="L79">        String token = JwtUtil.generateToken(savedUser.getEmail());</span>
+<span class="fc" id="L80">        return ResponseEntity.ok().body(</span>
+<span class="fc" id="L81">            Map.of(</span>
+                &quot;jwt&quot;, token,
+<span class="fc" id="L83">                &quot;id&quot;, savedUser.getId(),</span>
+<span class="fc" id="L84">                &quot;username&quot;, savedUser.getUsername(),</span>
+<span class="fc" id="L85">                &quot;email&quot;, savedUser.getEmail(),</span>
+<span class="fc" id="L86">                &quot;wallet&quot;, savedUser.getWallet()</span>
+            )
+        );
+    }
+
+    /**
+     * Deducts an amount from the user's wallet.
+     * @param payload map containing &quot;email&quot; and &quot;amount&quot;
+     * @return updated wallet balance or error
+     */
+    @PostMapping(&quot;/deduct&quot;)
+    public ResponseEntity&lt;?&gt; deductFromWallet(@RequestBody Map&lt;String, Object&gt; payload) {
+<span class="fc" id="L98">        String email = (String) payload.get(&quot;email&quot;);</span>
+<span class="fc" id="L99">        int amount = (int) payload.get(&quot;amount&quot;);</span>
+<span class="fc" id="L100">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(email);</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
+<span class="nc" id="L102">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
+        }
+<span class="fc" id="L104">        LoginModel user = userOpt.get();</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (amount &gt; user.getWallet()) {</span>
+<span class="nc" id="L106">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Insufficient wallet balance&quot;);</span>
+        }
+<span class="fc" id="L108">        user.setWallet(user.getWallet() - amount);</span>
+<span class="fc" id="L109">        loginService.saveLogin(user);</span>
+<span class="fc" id="L110">        return ResponseEntity.ok(Map.of(</span>
+            &quot;message&quot;, &quot;Deduction successful&quot;,
+<span class="fc" id="L112">            &quot;wallet&quot;, user.getWallet()</span>
+        ));
+    }
+
+    /**
+     * Adds money to the user's wallet.
+     * @param email the user's email
+     * @param amount the amount to add
+     * @return updated wallet balance or error
+     */
+    @PostMapping(&quot;/wallet/add&quot;)
+    public ResponseEntity&lt;?&gt; addToWallet(@RequestParam String email, @RequestParam int amount) {
+<span class="fc" id="L124">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(email);</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
+<span class="nc" id="L126">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
+        }
+<span class="fc" id="L128">        LoginModel user = userOpt.get();</span>
+<span class="fc" id="L129">        user.setWallet(user.getWallet() + amount);</span>
+<span class="fc" id="L130">        loginService.saveLogin(user);</span>
+<span class="fc" id="L131">        return ResponseEntity.ok(Map.of(</span>
+            &quot;message&quot;, &quot;Amount added successfully&quot;,
+<span class="fc" id="L133">            &quot;wallet&quot;, user.getWallet()</span>
+        ));
+    }
+
+    /**
+     * Gets wallet details for a user.
+     * @param email the user's email
+     * @return wallet balance or error
+     */
+    @GetMapping(&quot;/wallet&quot;)
+    public ResponseEntity&lt;?&gt; getWalletDetails(@RequestParam String email) {
+<span class="fc" id="L144">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(email);</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
+<span class="nc" id="L146">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
+        }
+<span class="fc" id="L148">        LoginModel user = userOpt.get();</span>
+<span class="fc" id="L149">        return ResponseEntity.ok(Map.of(</span>
+<span class="fc" id="L150">            &quot;email&quot;, user.getEmail(),</span>
+<span class="fc" id="L151">            &quot;wallet&quot;, user.getWallet()</span>
+        ));
+    }
+
+    /**
+     * Deletes a user by email.
+     * @param email the user's email
+     * @return success or error message
+     */
+    @DeleteMapping(&quot;/delete&quot;)
+    public ResponseEntity&lt;?&gt; deleteUser(@RequestParam String email) {
+<span class="fc" id="L162">        Optional&lt;LoginModel&gt; userOpt = loginService.findByEmail(email);</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (userOpt.isEmpty()) {</span>
+<span class="nc" id="L164">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User not found&quot;);</span>
+        }
+<span class="fc" id="L166">        loginService.deleteByEmail(email);</span>
+<span class="fc" id="L167">        return ResponseEntity.ok(Map.of(&quot;message&quot;, &quot;User deleted successfully&quot;));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

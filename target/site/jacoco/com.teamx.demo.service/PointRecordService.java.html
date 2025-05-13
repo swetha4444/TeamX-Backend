@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PointRecordService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.teamx.demo.service</a> &gt; <span class="el_source">PointRecordService.java</span></div><h1>PointRecordService.java</h1><pre class="source lang-java linenums">package com.teamx.demo.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.teamx.demo.model.PointRecord;
+import com.teamx.demo.repository.PointRecordRepository;
+
+@Service
+<span class="fc" id="L13">public class PointRecordService {</span>
+    @Autowired
+    private PointRecordRepository pointRecordRepository;
+
+    public List&lt;PointRecord&gt; getAll() {
+<span class="fc" id="L18">        return pointRecordRepository.findAll();</span>
+    }
+
+    public Optional&lt;PointRecord&gt; getByContestId(String contestId) {
+<span class="nc" id="L22">        return pointRecordRepository.findByContestId(contestId);</span>
+    }
+
+    public PointRecord save(PointRecord record) {
+<span class="nc" id="L26">        return pointRecordRepository.save(record);</span>
+    }
+
+    public void deleteById(String id) {
+<span class="nc" id="L30">        pointRecordRepository.deleteById(id);</span>
+<span class="nc" id="L31">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
