@@ -1,5 +1,6 @@
 import random
 from pymongo import MongoClient
+from datetime import datetime, timedelta
 
 # MongoDB setup
 MONGO_URI = "mongodb+srv://ssaseendran:teamx1234@teamxcluster.ybhmxsu.mongodb.net/Login?retryWrites=true&w=majority"
@@ -48,12 +49,16 @@ def init_points_for_all_contests():
     for contest_id in contest_ids:
         points = []
         used_types = set()
-        while len(points) < 10:
+        now = datetime.utcnow()
+        for i in range(10):
             p = get_random_point()
             # Ensure unique type per contest's initial points
-            if p['type'] not in used_types:
-                points.append(p)
-                used_types.add(p['type'])
+            while p['type'] in used_types:
+                p = get_random_point()
+            used_types.add(p['type'])
+            # Add timestamp, each one 1 min earlier than the previous
+            p['timestamp'] = (now - timedelta(minutes=i)).isoformat() + "Z"
+            points.append(p)
         points_collection.replace_one(
             {'contest_id': contest_id},
             {'contest_id': contest_id, 'points': points},
