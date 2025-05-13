@@ -32,3 +32,4 @@ build/
 src/main/resources/match_squads.json
 .DS_Store
 src/main/resources/players.json
+target/test-classes/com/teamx/demo/ControllerIntegrationTests.class
