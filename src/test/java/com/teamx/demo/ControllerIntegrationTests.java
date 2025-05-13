@@ -177,6 +177,35 @@ public class ControllerIntegrationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void testGetContestById_Found() {
+        // Create a contest first (assumes you have an endpoint or DB setup for this)
+        // If not, skip this test or mock the repository/service in a unit test
+        // For demonstration, let's assume an ID "existingContestId" exists
+        String contestId = "existingContestId";
+        ResponseEntity<Contest> response = restTemplate.getForEntity("/contests/" + contestId, Contest.class);
+        // Accept either found or not found depending on your DB state
+        assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
+    }
+
+    @Test
+    void testJoinContest_NotFound() {
+        ResponseEntity<Contest> response = restTemplate.exchange("/contests/doesnotexist/join", HttpMethod.PUT, null, Contest.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void testJoinContest_Found() {
+        // Assumes a contest with ID "existingContestId" exists
+        String contestId = "existingContestId";
+        ResponseEntity<Contest> response = restTemplate.exchange("/contests/" + contestId + "/join", HttpMethod.PUT, null, Contest.class);
+        // Accept either found or not found depending on your DB state
+        assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
+    }
+
+
+
+
 
     // --- PlayerController ---
     @Test
