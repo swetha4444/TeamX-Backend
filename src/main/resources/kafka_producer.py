@@ -3,10 +3,53 @@ import uuid
 import random
 import time
 from kafka import KafkaProducer
+from pymongo import MongoClient
 
 KAFKA_BROKER = 'localhost:9092'
 CONTESTS_FILE = 'src/main/resources/live_cricket_score_with_contest.json'
 TEAM_IMG_FILE = 'src/main/resources/team_images.json'
+POINTS_TOPIC = 'points'
+
+# MongoDB setup to fetch contest ids
+MONGO_URI = "mongodb+srv://ssaseendran:teamx1234@teamxcluster.ybhmxsu.mongodb.net/Login?retryWrites=true&w=majority"
+mongo_client = MongoClient(MONGO_URI)
+db = mongo_client['Login']
+contests_collection = db['contests']
+
+# Example points lists for all formats
+t20Points = [
+    [{'Type':'Run','Points': 1},{'Type':'Four Bonus','Points': 2},{'Type':'Six Bonus','Points': 2},{'Type':'Half Century Bonus','Points': 8},{'Type':'Century Bonus','Points': 16}],
+    [{'Type':'Wicket(Excluding Run Out)','Points': 25},{'Type':'Maiden Over Bonus','Points': 12},{'Type':'3 Wicket Bonus','Points': 4},{'Type':'5 Wicket Bonus','Points': 16}, {'Type':'Maiden Over','Points': 12}],
+    [{'Type':'Catch','Points': 8},{'Type':'3 Catch','Points': 4},{'Type':'Stumping','Points': 12},{'Type':'Run Out(Direct - Hit)','Points': 12}, {'Type':'Run Out(Not a direct - Hit)','Points': 6}],
+    [{'Type':'Captain','Points': 20}, {'Type':'Vice Captain','Points': 10}]
+]
+t10Points = [
+    [{'Type':'Run','Points': 1},{'Type':'Four Bonus','Points': 1},{'Type':'Six Bonus','Points': 2},{'Type':'30 Runs Bonus','Points': 8},{'Type':'Half Century Bonus','Points': 16}],
+    [{'Type':'Wicket(Excluding Run Out)','Points': 25},{'Type':'2 Wicket Bonus','Points': 8},{'Type':'3 Wicket Bonus','Points': 16}, {'Type':'Maiden Over','Points': 12}],
+    [{'Type':'Catch','Points': 8},{'Type':'3 Catch','Points': 4},{'Type':'Stumping','Points': 12},{'Type':'Run Out(Direct - Hit)','Points': 12}, {'Type':'Run Out(Not a direct - Hit)','Points': 6}],
+    [{'Type':'Captain','Points': 20}, {'Type':'Vice Captain','Points': 10}]
+]
+odiPoints = [
+    [{'Type':'Run','Points': 1},{'Type':'Four Bonus','Points': 1},{'Type':'Six Bonus','Points': 2},{'Type':'Half Century Bonus','Points': 4},{'Type':'Century Bonus','Points': 8}],
+    [{'Type':'Wicket(Excluding Run Out)','Points': 25},{'Type':'4 Wicket Bonus','Points': 4},{'Type':'5 Wicket Bonus','Points': 8}, {'Type':'Maiden Over','Points': 12}],
+    [{'Type':'Catch','Points': 8},{'Type':'3 Catch','Points': 4},{'Type':'Stumping','Points': 12},{'Type':'Run Out(Direct - Hit)','Points': 12}, {'Type':'Run Out(Not a direct - Hit)','Points': 6}],
+    [{'Type':'Captain','Points': 20}, {'Type':'Vice Captain','Points': 10}]
+]
+testPoints = [
+    [{'Type':'Run','Points': 1},{'Type':'Four Bonus','Points': 1},{'Type':'Six Bonus','Points': 2},{'Type':'Half Century Bonus','Points': 4},{'Type':'Century Bonus','Points': 8}],
+    [{'Type':'Wicket(Excluding Run Out)','Points': 16},{'Type':'4 Wicket Bonus','Points': 4},{'Type':'5 Wicket Bonus','Points': 8}],
+    [{'Type':'Catch','Points': 8},{'Type':'Stumping','Points': 12},{'Type':'Run Out(Direct - Hit)','Points': 12}, {'Type':'Run Out(Not a direct - Hit)','Points': 6}],
+    [{'Type':'Captain','Points': 20}, {'Type':'Vice Captain','Points': 10}]
+]
+
+def get_random_point():
+    points_list = random.choice([t20Points, t10Points, odiPoints, testPoints])
+    category = random.choice(points_list)
+    point = random.choice(category)
+    return {
+        "type": point['Type'],
+        "point": point['Points']
+    }
 
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER,
@@ -49,6 +92,19 @@ def generate_player(match_id, country):
 with open(CONTESTS_FILE) as f:
     contests = json.load(f)
 
+def send_random_point():
+    contest_ids = [str(doc['_id']) for doc in contests_collection.find({}, {'_id': 1})]
+    if not contest_ids:
+        print("No contests in DB to assign points.")
+        return
+    contest_id = random.choice(contest_ids)
+    point_record = {
+        "contest_id": contest_id,
+        "points": [get_random_point()]
+    }
+    producer.send(POINTS_TOPIC, point_record)
+    print(f"Sent point record for contest {contest_id}: {point_record}")
+
 while True:
     contest = next((c for c in contests if "data" in c and c["data"]), None)
     if contest:
@@ -68,6 +124,7 @@ while True:
                 producer.send('players', player)
                 print(f"Sent player: {player['name']} for contest {contest_id} (team: {country})")
 
+        send_random_point()
         producer.flush()
         print("All records sent to Kafka. Waiting 2 minutes...")
         time.sleep(120)  # 2 minutes

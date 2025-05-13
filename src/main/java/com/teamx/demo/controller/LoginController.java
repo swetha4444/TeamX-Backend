@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -90,6 +91,21 @@ public class LoginController {
         ));
     }
 
+    @PostMapping("/wallet/add")
+    public ResponseEntity<?> addToWallet(@RequestParam String email, @RequestParam int amount) {
+        Optional<LoginModel> userOpt = loginService.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        LoginModel user = userOpt.get();
+        user.setWallet(user.getWallet() + amount);
+        loginService.saveLogin(user);
+        return ResponseEntity.ok(Map.of(
+            "message", "Amount added successfully",
+            "wallet", user.getWallet()
+        ));
+    }
+
     @GetMapping("/wallet")
     public ResponseEntity<?> getWalletDetails(@RequestParam String email) {
         Optional<LoginModel> userOpt = loginService.findByEmail(email);
@@ -101,5 +117,15 @@ public class LoginController {
             "email", user.getEmail(),
             "wallet", user.getWallet()
         ));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@RequestParam String email) {
+        Optional<LoginModel> userOpt = loginService.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        loginService.deleteByEmail(email);
+        return ResponseEntity.ok(Map.of("message", "User deleted successfully"));
     }
 }

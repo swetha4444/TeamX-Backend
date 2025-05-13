@@ -7,9 +7,10 @@ from bson import ObjectId
 KAFKA_BROKER = 'localhost:9092'
 CONTEST_TOPIC = 'contests'
 PLAYER_TOPIC = 'players'
+POINTS_TOPIC = 'points'
 
 consumer = KafkaConsumer(
-    CONTEST_TOPIC, PLAYER_TOPIC,
+    CONTEST_TOPIC, PLAYER_TOPIC, POINTS_TOPIC,
     bootstrap_servers=KAFKA_BROKER,
     value_deserializer=lambda m: json.loads(m.decode('utf-8')),
     auto_offset_reset='earliest',
@@ -22,6 +23,7 @@ mongo_client = MongoClient(MONGO_URI)
 db = mongo_client['Login']
 contests_collection = db['contests']
 players_collection = db['players']
+points_collection = db['points']
 
 print("Kafka consumer started. Listening for messages...")
 
@@ -49,3 +51,14 @@ for message in consumer:
             del player_doc['matchId']
         players_collection.replace_one({'_id': player_doc['_id']}, player_doc, upsert=True)
         print(f"Inserted/updated player: {player_doc['_id']} (match_id: {player_doc['match_id']})")
+    elif message.topic == POINTS_TOPIC:
+        point_msg = message.value
+        contest_id = point_msg['contest_id']
+        new_point = point_msg['points'][0]
+        # Try to update existing record, else insert new
+        result = points_collection.update_one(
+            {'contest_id': contest_id},
+            {'$push': {'points': new_point}},
+            upsert=True
+        )
+        print(f"Added point {new_point} to contest {contest_id} in points collection.")

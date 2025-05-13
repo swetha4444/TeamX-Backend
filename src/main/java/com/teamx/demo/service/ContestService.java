@@ -56,4 +56,8 @@ public class ContestService {
         }
         return Optional.empty();
     }
+
+    public void deleteById(String id) {
+        contestRepository.deleteById(id);
+    }
 }
