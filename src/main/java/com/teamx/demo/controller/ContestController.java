@@ -18,6 +18,11 @@ import com.teamx.demo.repository.PointRecordRepository;
 import com.teamx.demo.repository.TeamRepository;
 import com.teamx.demo.service.ContestService;
 
+/**
+ * REST controller for managing contests and related entities.
+ * Provides endpoints to get, join, and delete contests,
+ * as well as cascade delete related players, teams, and points.
+ */
 @RestController
 @RequestMapping("/contests")
 public class ContestController {
@@ -34,11 +39,20 @@ public class ContestController {
     @Autowired
     private TeamRepository teamRepository;
 
+    /**
+     * Retrieves all contests.
+     * @return list of all contests
+     */
     @GetMapping
     public List<Contest> getAllContests() {
         return contestService.getAllContests();
     }
 
+    /**
+     * Retrieves a contest by its ID.
+     * @param id the contest ID
+     * @return the contest if found, or 404 if not found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Contest> getContestById(@PathVariable String id) {
         return contestService.getContestById(id)
@@ -46,6 +60,11 @@ public class ContestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Joins a contest by updating its prize pool and spots.
+     * @param id the contest ID
+     * @return the updated contest if found, or 404 if not found
+     */
     @PutMapping("/{id}/join")
     public ResponseEntity<Contest> joinContest(@PathVariable String id) {
         return contestService.updatePrizePoolAndSpots(id)
@@ -53,6 +72,11 @@ public class ContestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Deletes a contest and all related players, teams, and points.
+     * @param id the contest ID
+     * @return a message indicating successful deletion
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteContestAndRelated(@PathVariable String id) {
         // Delete contest
@@ -64,7 +88,7 @@ public class ContestController {
         // Delete all points with contest_id = contest id
         pointRecordRepository.deleteByContestId(id);
 
-        // Delete all teams with matchId = contest id
+        // Delete all teams with contestId = contest id
         teamRepository.deleteByContestId(id);
 
         return ResponseEntity.ok(

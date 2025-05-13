@@ -19,6 +19,9 @@ import com.teamx.demo.model.LoginModel;
 import com.teamx.demo.service.LoginService;
 import com.teamx.demo.utils.JwtUtil;
 
+/**
+ * REST controller for authentication and wallet operations.
+ */
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
@@ -26,11 +29,20 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
+    /**
+     * Returns all login records.
+     * @return list of all users
+     */
     @GetMapping
     public List<LoginModel> getAllLogins() {
         return loginService.getAllLogins();
     }
 
+    /**
+     * Authenticates a user and returns a JWT token if successful.
+     * @param loginRequest the login request containing email and password
+     * @return JWT token and user info if successful, error otherwise
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginModel loginRequest) {
         Optional<LoginModel> userOpt = loginService.findByEmail(loginRequest.getEmail());
@@ -52,6 +64,11 @@ public class LoginController {
         );
     }
 
+    /**
+     * Registers a new user.
+     * @param signupRequest the signup request containing user details
+     * @return JWT token and user info if successful, error otherwise
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody LoginModel signupRequest) {
         if (loginService.findByEmail(signupRequest.getEmail()).isPresent()) {
@@ -71,6 +88,11 @@ public class LoginController {
         );
     }
 
+    /**
+     * Deducts an amount from the user's wallet.
+     * @param payload map containing "email" and "amount"
+     * @return updated wallet balance or error
+     */
     @PostMapping("/deduct")
     public ResponseEntity<?> deductFromWallet(@RequestBody Map<String, Object> payload) {
         String email = (String) payload.get("email");
@@ -91,6 +113,12 @@ public class LoginController {
         ));
     }
 
+    /**
+     * Adds money to the user's wallet.
+     * @param email the user's email
+     * @param amount the amount to add
+     * @return updated wallet balance or error
+     */
     @PostMapping("/wallet/add")
     public ResponseEntity<?> addToWallet(@RequestParam String email, @RequestParam int amount) {
         Optional<LoginModel> userOpt = loginService.findByEmail(email);
@@ -106,6 +134,11 @@ public class LoginController {
         ));
     }
 
+    /**
+     * Gets wallet details for a user.
+     * @param email the user's email
+     * @return wallet balance or error
+     */
     @GetMapping("/wallet")
     public ResponseEntity<?> getWalletDetails(@RequestParam String email) {
         Optional<LoginModel> userOpt = loginService.findByEmail(email);
@@ -119,6 +152,11 @@ public class LoginController {
         ));
     }
 
+    /**
+     * Deletes a user by email.
+     * @param email the user's email
+     * @return success or error message
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestParam String email) {
         Optional<LoginModel> userOpt = loginService.findByEmail(email);
