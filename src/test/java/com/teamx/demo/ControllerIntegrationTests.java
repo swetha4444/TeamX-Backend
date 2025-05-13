@@ -160,4 +160,46 @@ public class ControllerIntegrationTests {
         assertThat(response.getBody()).contains("MongoDB connection");
     }
 
+
+    // --- ContestController ---
+    @Test
+    void testGetAllContests() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/contests", String.class);
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+    }
+
+    // --- PlayerController ---
+    @Test
+    void testGetPlayersByMatchId() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/players/match/dummyMatchId", String.class);
+        assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
+    }
+
+    @Test
+    void testGetPlayersByMatchIds() {
+        HttpEntity<List<String>> req = new HttpEntity<>(List.of("dummyMatchId"));
+        ResponseEntity<String> response = restTemplate.postForEntity("/players/matches", req, String.class);
+        assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
+    }
+
+    // --- PointRecordController ---
+    @Test
+    void testGetAllPoints() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/points", String.class);
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+    }
+
+    // --- TeamController ---
+    @Test
+    void testGetTeamsByContestId() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/contest/dummyContestId", String.class);
+        assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
+    }
+
+    @Test
+    void testGetTeamsByUserEmail() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/user/dummy@example.com", String.class);
+        assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
+    }
+    
 }
