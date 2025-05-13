@@ -23,6 +23,11 @@ import com.teamx.demo.model.Team;
 import com.teamx.demo.service.ContestService;
 import com.teamx.demo.service.TeamService;
 
+/**
+ * REST controller for managing teams.
+ * Provides endpoints to create teams, retrieve teams by contest or user,
+ * get captain/vice-captain, and get combined contest/team details.
+ */
 @RestController
 @RequestMapping("/teams")
 public class TeamController {
@@ -33,6 +38,11 @@ public class TeamController {
     @Autowired
     private ContestService contestService;
 
+    /**
+     * Creates a new team and reduces the spots left for the associated contest.
+     * @param team the team to create
+     * @return the created team
+     */
     @PostMapping
     public ResponseEntity<?> createTeam(@RequestBody Team team) {
         Team savedTeam = teamService.createTeam(team);
@@ -41,18 +51,33 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTeam);
     }
     
+    /**
+     * Retrieves all teams for a given contest ID.
+     * @param contestId the contest ID
+     * @return list of teams for the contest
+     */
     @GetMapping("/contest/{contestId}")
     public ResponseEntity<?> getTeamsByContestId(@PathVariable String contestId) {
         List<Team> teams = teamService.getTeamsByContestId(contestId);
         return ResponseEntity.ok(teams);
     }
     
+    /**
+     * Retrieves all teams created by a user.
+     * @param userEmail the user's email
+     * @return list of teams created by the user
+     */
     @GetMapping("/user/{userEmail}")
     public ResponseEntity<?> getTeamsByUserEmail(@PathVariable String userEmail) {
         List<Team> teams = teamService.getTeamsByUserEmail(userEmail);
         return ResponseEntity.ok(teams);
     }
     
+    /**
+     * Retrieves the captain of a team.
+     * @param teamId the team ID
+     * @return the captain of the team, or 404 if not found
+     */
     @GetMapping("/{teamId}/captain")
     public ResponseEntity<?> getTeamCaptain(@PathVariable String teamId) {
         Optional<Team> teamOpt = teamService.getTeamById(teamId);
@@ -62,6 +87,11 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Team not found");
     }
     
+    /**
+     * Retrieves the vice-captain of a team.
+     * @param teamId the team ID
+     * @return the vice-captain of the team, or 404 if not found
+     */
     @GetMapping("/{teamId}/viceCaptain")
     public ResponseEntity<?> getTeamViceCaptain(@PathVariable String teamId) {
         Optional<Team> teamOpt = teamService.getTeamById(teamId);
@@ -71,7 +101,11 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Team not found");
     }
     
-    // New combined endpoint using ContestWithTeams model
+    /**
+     * Retrieves combined contest and team details for all contests a user has joined.
+     * @param userEmail the user's email
+     * @return list of contests with their associated teams for the user
+     */
     @GetMapping("/combined")
     public ResponseEntity<?> getContestAndTeamDetails(@RequestParam String userEmail) {
         // Get all teams created by the user.
