@@ -33,4 +33,8 @@ public class LoginService {
         }
         return Optional.empty();
     }
+
+    public void deleteByEmail(String email) {
+        loginRepository.deleteByEmail(email);
+    }
 }
