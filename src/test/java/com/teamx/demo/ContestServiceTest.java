@@ -43,4 +43,31 @@ class ContestServiceTest {
         when(contestRepository.findById("none")).thenReturn(Optional.empty());
         assertThat(contestService.getContestById("none")).isEmpty();
     }
+    
+    @Test
+    void testUpdatePrizePoolAndSpots() {
+        Contest.ContestData data = new Contest.ContestData();
+        data.setPrizePool(100);
+        data.setEntryFee(10);
+        data.setSpotsLeft(2);
+        Contest contest = new Contest();
+        contest.setData(List.of(data));
+        when(contestRepository.findById("id")).thenReturn(Optional.of(contest));
+        when(contestRepository.save(any())).thenReturn(contest);
+
+        Optional<Contest> result = contestService.updatePrizePoolAndSpots("id");
+        assertThat(result).isPresent();
+        assertThat(data.getPrizePool()).isEqualTo(110);
+        assertThat(data.getSpotsLeft()).isEqualTo(1);
+
+        // No data
+        Contest contestNoData = new Contest();
+        contestNoData.setData(List.of());
+        when(contestRepository.findById("noData")).thenReturn(Optional.of(contestNoData));
+        assertThat(contestService.updatePrizePoolAndSpots("noData")).isPresent();
+
+        // Not found
+        when(contestRepository.findById("none")).thenReturn(Optional.empty());
+        assertThat(contestService.updatePrizePoolAndSpots("none")).isEmpty();
+    }
 }
