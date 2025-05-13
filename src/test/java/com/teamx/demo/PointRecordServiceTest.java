@@ -43,4 +43,11 @@ class PointRecordServiceTest {
         assertThat(pointRecordService.getByContestId("none")).isEmpty();
     }
 
+    @Test
+    void testSave() {
+        PointRecord record = new PointRecord();
+        when(pointRecordRepository.save(record)).thenReturn(record);
+        assertThat(pointRecordService.save(record)).isEqualTo(record);
+    }
+
 }
