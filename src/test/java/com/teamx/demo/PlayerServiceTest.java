@@ -37,5 +37,14 @@ class PlayerServiceTest {
         when(playerRepository.findByMatchIdIn(List.of("m1", "m2"))).thenReturn(List.of(new Player()));
         assertThat(playerService.getPlayersByMatchIds(List.of("m1", "m2"))).hasSize(1);
     }
-    
+ 
+    @Test
+    void testGetPlayerById() {
+        Player player = new Player();
+        when(playerRepository.findById("id")).thenReturn(Optional.of(player));
+        assertThat(playerService.getPlayerById("id")).contains(player);
+
+        when(playerRepository.findById("none")).thenReturn(Optional.empty());
+        assertThat(playerService.getPlayerById("none")).isEmpty();
+    }
 }
