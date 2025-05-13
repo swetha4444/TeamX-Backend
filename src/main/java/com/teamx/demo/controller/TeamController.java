@@ -74,34 +74,6 @@ public class TeamController {
     }
     
     /**
-     * Retrieves the captain of a team.
-     * @param teamId the team ID
-     * @return the captain of the team, or 404 if not found
-     */
-    @GetMapping("/{teamId}/captain")
-    public ResponseEntity<?> getTeamCaptain(@PathVariable String teamId) {
-        Optional<Team> teamOpt = teamService.getTeamById(teamId);
-        if (teamOpt.isPresent()) {
-            return ResponseEntity.ok(teamOpt.get().getCaptain());
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Team not found");
-    }
-    
-    /**
-     * Retrieves the vice-captain of a team.
-     * @param teamId the team ID
-     * @return the vice-captain of the team, or 404 if not found
-     */
-    @GetMapping("/{teamId}/viceCaptain")
-    public ResponseEntity<?> getTeamViceCaptain(@PathVariable String teamId) {
-        Optional<Team> teamOpt = teamService.getTeamById(teamId);
-        if (teamOpt.isPresent()) {
-            return ResponseEntity.ok(teamOpt.get().getViceCaptain());
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Team not found");
-    }
-    
-    /**
      * Retrieves combined contest and team details for all contests a user has joined.
      * @param userEmail the user's email
      * @return list of contests with their associated teams for the user

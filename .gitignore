@@ -1,5 +1,5 @@
 HELP.md
-target/classes
+target/*
 
 
 ### STS ###
@@ -32,3 +32,5 @@ build/
 src/main/resources/match_squads.json
 .DS_Store
 src/main/resources/players.json
+target/site/*
+target/site/jacoco/com.teamx.demo.model/index.html

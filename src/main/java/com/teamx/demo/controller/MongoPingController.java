@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MongoPingController {
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    public MongoTemplate mongoTemplate;
 
     /**
      * Endpoint to ping MongoDB and verify connection.

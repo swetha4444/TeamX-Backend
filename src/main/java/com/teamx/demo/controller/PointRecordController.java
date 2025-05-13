@@ -18,7 +18,6 @@ import com.teamx.demo.service.PointRecordService;
 
 /**
  * REST controller for managing point records for fantasy contests.
- * <p>
  * This controller provides endpoints to:
  * <ul>
  *   <li>Retrieve all point records</li>
@@ -28,7 +27,6 @@ import com.teamx.demo.service.PointRecordService;
  *   <li>Delete a point record</li>
  * </ul>
  * Each point record is associated with a contest and contains a list of points earned by players or teams.
- * </p>
  */
 @RestController
 @RequestMapping("/points")
