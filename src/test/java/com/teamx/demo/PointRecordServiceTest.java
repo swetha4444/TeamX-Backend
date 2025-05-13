@@ -33,4 +33,14 @@ class PointRecordServiceTest {
         assertThat(pointRecordService.getAll()).hasSize(1);
     }
 
+    @Test
+    void testGetByContestId() {
+        PointRecord record = new PointRecord();
+        when(pointRecordRepository.findByContestId("c")).thenReturn(Optional.of(record));
+        assertThat(pointRecordService.getByContestId("c")).contains(record);
+
+        when(pointRecordRepository.findByContestId("none")).thenReturn(Optional.empty());
+        assertThat(pointRecordService.getByContestId("none")).isEmpty();
+    }
+
 }
