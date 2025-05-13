@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 <span class="fc" id="L13">public class MongoPingController {</span>
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    public MongoTemplate mongoTemplate;
 
     /**
      * Endpoint to ping MongoDB and verify connection.
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 <span class="fc" id="L24">        Document ping = new Document(&quot;ping&quot;, 1);</span>
 <span class="fc" id="L25">        Document result = mongoTemplate.executeCommand(ping);</span>
 <span class="fc" id="L26">        Object okValue = result.get(&quot;ok&quot;);</span>
-<span class="pc bpc" id="L27" title="4 of 6 branches missed.">        if ((okValue instanceof Double &amp;&amp; ((Double) okValue) == 1.0) ||</span>
-<span class="pc bpc" id="L28" title="1 of 2 branches missed.">            (okValue instanceof Integer &amp;&amp; ((Integer) okValue) == 1)) {</span>
+<span class="fc bfc" id="L27" title="All 4 branches covered.">        if ((okValue instanceof Double &amp;&amp; ((Double) okValue) == 1.0) ||</span>
+<span class="fc bfc" id="L28" title="All 4 branches covered.">            (okValue instanceof Integer &amp;&amp; ((Integer) okValue) == 1)) {</span>
 <span class="fc" id="L29">            return &quot;MongoDB connection is OK!&quot;;</span>
         } else {
-<span class="nc" id="L31">            return &quot;MongoDB connection failed!&quot;;</span>
+<span class="fc" id="L31">            return &quot;MongoDB connection failed!&quot;;</span>
         }
     }
 }

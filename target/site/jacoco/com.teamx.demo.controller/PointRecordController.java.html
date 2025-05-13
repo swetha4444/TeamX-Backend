@@ -54,9 +54,9 @@ import com.teamx.demo.service.PointRecordService;
      */
     @GetMapping(&quot;/contest/{contestId}&quot;)
     public ResponseEntity&lt;PointRecord&gt; getByContestId(@PathVariable String contestId) {
-<span class="nc" id="L57">        return pointRecordService.getByContestId(contestId)</span>
-<span class="nc" id="L58">                .map(ResponseEntity::ok)</span>
-<span class="nc" id="L59">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="fc" id="L57">        return pointRecordService.getByContestId(contestId)</span>
+<span class="fc" id="L58">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L59">                .orElse(ResponseEntity.notFound().build());</span>
     }
 
     /**
@@ -67,7 +67,7 @@ import com.teamx.demo.service.PointRecordService;
      */
     @PostMapping
     public PointRecord create(@RequestBody PointRecord record) {
-<span class="nc" id="L70">        return pointRecordService.save(record);</span>
+<span class="fc" id="L70">        return pointRecordService.save(record);</span>
     }
 
     /**
@@ -79,8 +79,8 @@ import com.teamx.demo.service.PointRecordService;
      */
     @PutMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;PointRecord&gt; update(@PathVariable String id, @RequestBody PointRecord record) {
-<span class="nc" id="L82">        record.setId(id);</span>
-<span class="nc" id="L83">        return ResponseEntity.ok(pointRecordService.save(record));</span>
+<span class="fc" id="L82">        record.setId(id);</span>
+<span class="fc" id="L83">        return ResponseEntity.ok(pointRecordService.save(record));</span>
     }
 
     /**
@@ -91,8 +91,8 @@ import com.teamx.demo.service.PointRecordService;
      */
     @DeleteMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Void&gt; delete(@PathVariable String id) {
-<span class="nc" id="L94">        pointRecordService.deleteById(id);</span>
-<span class="nc" id="L95">        return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L94">        pointRecordService.deleteById(id);</span>
+<span class="fc" id="L95">        return ResponseEntity.noContent().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

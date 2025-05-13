@@ -19,15 +19,15 @@ import com.teamx.demo.repository.PointRecordRepository;
     }
 
     public Optional&lt;PointRecord&gt; getByContestId(String contestId) {
-<span class="nc" id="L22">        return pointRecordRepository.findByContestId(contestId);</span>
+<span class="fc" id="L22">        return pointRecordRepository.findByContestId(contestId);</span>
     }
 
     public PointRecord save(PointRecord record) {
-<span class="nc" id="L26">        return pointRecordRepository.save(record);</span>
+<span class="fc" id="L26">        return pointRecordRepository.save(record);</span>
     }
 
     public void deleteById(String id) {
-<span class="nc" id="L30">        pointRecordRepository.deleteById(id);</span>
-<span class="nc" id="L31">    }</span>
+<span class="fc" id="L30">        pointRecordRepository.deleteById(id);</span>
+<span class="fc" id="L31">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
