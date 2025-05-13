@@ -128,7 +128,7 @@ public class ControllerIntegrationTests {
 
         // Delete user
         ResponseEntity<Map> delResp = restTemplate.exchange("/auth/delete?email=testuser@example.com", HttpMethod.DELETE, null, Map.class);
-        assertThat(delResp.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(delResp.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -220,8 +220,6 @@ public class ControllerIntegrationTests {
         assertThat(response.getBody()).containsKey("message");
     }
 
-
-
     // --- PlayerController ---
     @Test
     void testGetPlayersByMatchId() {
@@ -255,5 +253,76 @@ public class ControllerIntegrationTests {
         ResponseEntity<String> response = restTemplate.getForEntity("/teams/user/dummy@example.com", String.class);
         assertThat(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().is4xxClientError()).isTrue();
     }
-    
+
+    // --- TeamController FULL COVERAGE ---
+
+    @Test
+    void testCreateTeam_Found() {
+        Map<String, Object> player = Map.of(
+            "id", "testplayer1",
+            "name", "Test Player",
+            "team", "Test Team",
+            "role", "Allrounder"
+        );
+
+        Map<String, Object> team = Map.of(
+            "matchId", "68210e61c8ceb31ce5c0f1b8",
+            "userEmail", "new@example.com",
+            "captain", "testplayer1",      // player id
+            "viceCaptain", "testplayer1",  // player id
+            "players", List.of(player)     // list of player objects
+        );
+
+        HttpEntity<Map<String, Object>> req = new HttpEntity<>(team);
+        ResponseEntity<Map> response = restTemplate.postForEntity("/teams", req, Map.class);
+        // assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        System.out.println(response.getBody())
+        assertThat(response.getBody()).containsKey("id");
+    }
+
+    @Test
+    void testGetTeamsByContestId_Found() {
+        String contestId = "68210e61c8ceb31ce5c0f1b8";
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/contest/" + contestId, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void testGetTeamsByContestId_NotFound() {
+        String contestId = "nonexistentContestId";
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/contest/" + contestId, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("[]");
+    }
+
+    @Test
+    void testGetTeamsByUserEmail_Found() {
+        String userEmail = "new@example.com";
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/user/" + userEmail, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void testGetTeamsByUserEmail_NotFound() {
+        String userEmail = "nonexistent@example.com";
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/user/" + userEmail, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("[]");
+    }
+
+    @Test
+    void testGetContestAndTeamDetails_Found() {
+        String userEmail = "new@example.com";
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/combined?userEmail=" + userEmail, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("contest");
+    }
+
+    @Test
+    void testGetContestAndTeamDetails_NotFound() {
+        String userEmail = "nonexistent@example.com";
+        ResponseEntity<String> response = restTemplate.getForEntity("/teams/combined?userEmail=" + userEmail, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("[]");
+    }
 }
