@@ -1,0 +1,6 @@
+com.teamx.demo
+com.teamx.demo.controller
+com.teamx.demo.model
+com.teamx.demo.repository
+com.teamx.demo.service
+com.teamx.demo.utils
