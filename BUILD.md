@@ -20,7 +20,7 @@
    Create an `application.properties` file in `src/main/resources/` with the following content:
 
    ```properties
-   spring.data.mongodb.uri=mongodb://localhost:27017/teamx
+   spring.data.mongodb.uri=mongodb+srv://ssaseendran:teamx1234@teamxcluster.ybhmxsu.mongodb.net/Login?retryWrites=true&w=majority
    ```
 
    Ensure MongoDB is running and accessible at the specified URI.
