@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.teamx.demo.utils</a> &gt; <span class="el_source">JwtUtil.java</span></div><h1>JwtUtil.java</h1><pre class="source lang-java linenums">package com.teamx.demo.utils;
+
+import java.security.Key;
+import java.util.Date;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
+<span class="nc" id="L10">public class JwtUtil {</span>
+<span class="fc" id="L11">    private static final Key SECRET_KEY = Keys.hmacShaKeyFor(&quot;your_secret_key_which_is_at_least_32_bytes!&quot;.getBytes());</span>
+
+    public static String generateToken(String email) {
+<span class="fc" id="L14">        return Jwts.builder()</span>
+<span class="fc" id="L15">                .setSubject(email)</span>
+<span class="fc" id="L16">                .setIssuedAt(new Date())</span>
+<span class="fc" id="L17">                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day</span>
+<span class="fc" id="L18">                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)</span>
+<span class="fc" id="L19">                .compact();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

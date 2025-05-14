@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ContestService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.teamx.demo.service</a> &gt; <span class="el_source">ContestService.java</span></div><h1>ContestService.java</h1><pre class="source lang-java linenums">package com.teamx.demo.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.teamx.demo.model.Contest;
+import com.teamx.demo.repository.ContestRepository;
+
+@Service
+<span class="fc" id="L13">public class ContestService {</span>
+
+    @Autowired
+    private ContestRepository contestRepository;
+
+    public List&lt;Contest&gt; getAllContests() {
+<span class="fc" id="L19">        return contestRepository.findAll();</span>
+    }
+
+    public Optional&lt;Contest&gt; getContestById(String id) {
+<span class="fc" id="L23">        return contestRepository.findById(id);</span>
+    }
+
+    public Optional&lt;Contest&gt; updatePrizePoolAndSpots(String id) {
+<span class="fc" id="L27">        Optional&lt;Contest&gt; contestOpt = contestRepository.findById(id);</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (contestOpt.isPresent()) {</span>
+<span class="fc" id="L29">            Contest contest = contestOpt.get();</span>
+            // Assuming only one data entry per contest (adjust if multiple)
+<span class="pc bpc" id="L31" title="1 of 4 branches missed.">            if (contest.getData() != null &amp;&amp; !contest.getData().isEmpty()) {</span>
+<span class="fc" id="L32">                Contest.ContestData data = contest.getData().get(0);</span>
+<span class="fc" id="L33">                data.setPrizePool(data.getPrizePool() + data.getEntryFee());</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">                if (data.getSpotsLeft() &gt; 0) {</span>
+<span class="fc" id="L35">                    data.setSpotsLeft(data.getSpotsLeft() - 1);</span>
+                }
+<span class="fc" id="L37">                contestRepository.save(contest);</span>
+            }
+<span class="fc" id="L39">            return Optional.of(contest);</span>
+        }
+<span class="fc" id="L41">        return Optional.empty();</span>
+    }
+
+    public Optional&lt;Contest&gt; reduceSpotsLeft(String contestId) {
+<span class="fc" id="L45">        Optional&lt;Contest&gt; contestOpt = contestRepository.findById(contestId);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (contestOpt.isPresent()) {</span>
+<span class="fc" id="L47">            Contest contest = contestOpt.get();</span>
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">            if (contest.getData() != null &amp;&amp; !contest.getData().isEmpty()) {</span>
+<span class="fc" id="L49">                Contest.ContestData data = contest.getData().get(0);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">                if (data.getSpotsLeft() &gt; 0) {</span>
+<span class="fc" id="L51">                    data.setSpotsLeft(data.getSpotsLeft() - 1);</span>
+<span class="fc" id="L52">                    contestRepository.save(contest);</span>
+                }
+            }
+<span class="fc" id="L55">            return Optional.of(contest);</span>
+        }
+<span class="fc" id="L57">        return Optional.empty();</span>
+    }
+
+    public void deleteById(String id) {
+<span class="fc" id="L61">        contestRepository.deleteById(id);</span>
+<span class="fc" id="L62">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
