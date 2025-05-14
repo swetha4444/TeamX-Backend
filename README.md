@@ -47,7 +47,7 @@ The REST API supports the following operations:
 - `/leaderboard`: Retrieve real-time contest rankings
 - `/wallet`: Handle user credits
 
-Use Postman or any REST client to test endpoints locally on `http://localhost:8080/`.
+Use Postman or any REST client to test endpoints locally on `mongodb+srv://ssaseendran:teamx1234@teamxcluster.ybhmxsu.mongodb.net/Login?retryWrites=true&w=majority`.
 
 ## 🧪 Testing
 
