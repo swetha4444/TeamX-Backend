@@ -30,4 +30,25 @@ class ContestRepositoryTest {
         List<Contest> contests = contestRepository.findAll();
 
         assertThat(contests).hasSize(1);
-    }}
+    }
+
+    @Test
+    void testFindById() {
+        Contest contest = new Contest();
+        contest.setId("contest1");
+        contestRepository.save(contest);
+
+        assertThat(contestRepository.findById("contest1")).isPresent();
+    }
+
+    @Test
+    void testDeleteById() {
+        Contest contest = new Contest();
+        contest.setId("contest1");
+        contestRepository.save(contest);
+
+        contestRepository.deleteById("contest1");
+
+        assertThat(contestRepository.findById("contest1")).isEmpty();
+    }
+}
