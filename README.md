@@ -54,7 +54,7 @@ Use Postman or any REST client to test endpoints locally on `mongodb+srv://ssase
 Unit and integration testing support is scaffolded. Run tests using:
 
 ```bash
-./mvnw test
+mvn test
 ```
 
 ## 📍 Contributing
