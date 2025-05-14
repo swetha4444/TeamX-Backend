@@ -51,4 +51,32 @@ class LoginServiceTest {
         when(loginRepository.save(login)).thenReturn(login);
         assertThat(loginService.saveLogin(login)).isEqualTo(login);
     }
+
+    @Test
+    void testFindByEmail() {
+        LoginModel login = new LoginModel();
+        when(loginRepository.findByEmail("a")).thenReturn(Optional.of(login));
+        assertThat(loginService.findByEmail("a")).contains(login);
+
+        when(loginRepository.findByEmail("b")).thenReturn(Optional.empty());
+        assertThat(loginService.findByEmail("b")).isEmpty();
+    }
+
+    @Test
+    void testLogin() {
+        LoginModel login = new LoginModel();
+        login.setPassword("pw");
+        when(loginRepository.findByEmail("a")).thenReturn(Optional.of(login));
+        assertThat(loginService.login("a", "pw")).contains(login);
+        assertThat(loginService.login("a", "wrong")).isEmpty();
+
+        when(loginRepository.findByEmail("b")).thenReturn(Optional.empty());
+        assertThat(loginService.login("b", "pw")).isEmpty();
+    }
+
+    @Test
+    void testDeleteByEmail() {
+        loginService.deleteByEmail("a");
+        verify(loginRepository).deleteByEmail("a");
+    }
 }
