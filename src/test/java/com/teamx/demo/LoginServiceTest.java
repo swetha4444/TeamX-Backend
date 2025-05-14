@@ -31,4 +31,24 @@ class LoginServiceTest {
     void testGetAllLogins() {
         when(loginRepository.findAll()).thenReturn(List.of(new LoginModel()));
         assertThat(loginService.getAllLogins()).hasSize(1);
-    }}
+    }
+
+    @Test
+    void testLogin2() {
+        LoginModel login = new LoginModel();
+        login.setPassword("pw");
+        when(loginRepository.findByEmail("a")).thenReturn(Optional.of(login));
+        assertThat(loginService.login("a", "pw")).contains(login); // password matches
+        assertThat(loginService.login("a", "wrong")).isEmpty();    // password does not match
+
+        when(loginRepository.findByEmail("b")).thenReturn(Optional.empty());
+        assertThat(loginService.login("b", "pw")).isEmpty();       // user not found
+    }
+
+    @Test
+    void testSaveLogin() {
+        LoginModel login = new LoginModel();
+        when(loginRepository.save(login)).thenReturn(login);
+        assertThat(loginService.saveLogin(login)).isEqualTo(login);
+    }
+}
