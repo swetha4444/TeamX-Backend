@@ -44,11 +44,11 @@ class ContestRepositoryTest {
     @Test
     void testDeleteById() {
         Contest contest = new Contest();
-        contest.setId("contest1");
+        contest.setId("e1e86a41c8844331b13b9610");
         contestRepository.save(contest);
 
-        contestRepository.deleteById("contest1");
+        contestRepository.deleteById("e1e86a41c8844331b13b9610");
 
-        assertThat(contestRepository.findById("contest1")).isEmpty();
+        assertThat(contestRepository.findById("e1e86a41c8844331b13b9610")).isEmpty();
     }
 }
